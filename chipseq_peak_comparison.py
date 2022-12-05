@@ -1,7 +1,7 @@
 import bionumpy as bnp
 from bionumpy.arithmetics.similarity_measures import forbes, jaccard
 
-
+# These are the transcription factors with good motif scores (and some bad ones)
 filenames = {"CREM": "ENCFF324ELP.bed.gz",
              "ZNF263": "ENCFF295XBK.bed.gz",
              "FOXA1": "ENCFF497OQD.bed.gz",
@@ -19,23 +19,28 @@ filenames = {"CREM": "ENCFF324ELP.bed.gz",
 
 # This is the filename for our ctcf tf file
 ctcf_filename = "ENCFF843VHC.bed.gz"
-scores = {}
-jaccards = {}
 
+# We need the size of the chromosomes in order to do similarity_measures
 chrom_sizes = bnp.open("hg38.chrom.sizes").read()
+
+# Since peak files are not sorted, we need to sort them
 sort_order = chrom_sizes.name.tolist()
 ctcf_peaks = bnp.arithmetics.sort_all_intervals(
     bnp.open(ctcf_filename).read(), sort_order=sort_order)
 
+
+# Now to calculate scores
+scores = {}
+jaccards = {}
 for name, filename in filenames.items():
     tf_peaks = bnp.arithmetics.sort_all_intervals(
         bnp.open(filename).read(),
         sort_order=sort_order)
 
-    scores[name] = forbes(chrom_sizes,
-                          ctcf_peaks,
-                          tf_peaks)
+    scores[name] = forbes(chrom_sizes, ctcf_peaks, tf_peaks)
     jaccards[name] = jaccard(chrom_sizes, ctcf_peaks, tf_peaks)
+
+# Maybe the good motif scores predict good peak overlap?
 
 print(scores)
 print(jaccards)
