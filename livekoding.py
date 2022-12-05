@@ -11,6 +11,5 @@ mask = sequences < 10
 
 print(np.sum(mask, axis=0))
 
-https://github.com/uio-bmi/bionumpy-workshop
 
 
