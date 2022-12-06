@@ -1,5 +1,5 @@
 import bionumpy as bnp
-from bionumpy.arithmetics.similarity_measures import forbes, jaccard
+from bionumpy.arithmetics import sort_intervals, forbes, jaccard
 
 # These are the transcription factors with good motif scores (and some bad ones)
 filenames = {"CREM": "ENCFF324ELP.bed.gz",
@@ -25,7 +25,7 @@ chrom_sizes = bnp.open("hg38.chrom.sizes").read()
 
 # Since peak files are not sorted, we need to sort them
 sort_order = chrom_sizes.name.tolist()
-ctcf_peaks = bnp.arithmetics.sort_all_intervals(
+ctcf_peaks = sort_intervals(
     bnp.open(ctcf_filename).read(), sort_order=sort_order)
 
 
@@ -33,7 +33,7 @@ ctcf_peaks = bnp.arithmetics.sort_all_intervals(
 scores = {}
 jaccards = {}
 for name, filename in filenames.items():
-    tf_peaks = bnp.arithmetics.sort_all_intervals(
+    tf_peaks = sort_intervals(
         bnp.open(filename).read(),
         sort_order=sort_order)
 
