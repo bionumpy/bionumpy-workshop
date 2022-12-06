@@ -10,22 +10,24 @@ import plotly.express as plx
 peaks = bnp.open("ENCFF843VHC.bed.gz").read()
 reference_genome = bnp.open_indexed("/home/knut/Data/hg38.fa")
 contig_lenghts = reference_genome.get_contig_lengths()
-sorted_peaks = bnp.arithmetics.sort_all_intervals(
-    peaks, sort_order=list(contig_lenghts.keys()))
+# sorted_peaks = bnp.arithmetics.sort_all_intervals(
+#     peaks, sort_order=list(contig_lenghts.keys()))
 
 
 # We need to synch our peaks to the reference genome
-multistream = bnp.MultiStream(contig_lenghts,
-                              intervals=sorted_peaks,
-                              sequence=reference_genome)
-
+# multistream = bnp.MultiStream(contig_lenghts,
+#                               intervals=sorted_peaks,
+#                               sequence=reference_genome)
+# 
 
 # Get the sequences of the peaks
-sequence_stream = bnp.sequence.get_sequences(multistream.sequence,
-                                             multistream.intervals)
+#sequence_stream = bnp.sequence.get_sequences(multistream.sequence,
+#                                              multistream.intervals)
 
 # Merge all the sequences from the stream
-sequences = np.concatenate(list(sequence_stream))
+# sequences = np.concatenate(list(sequence_stream))
+
+sequences = reference_genome.get_interval_sequences(peaks)
 
 # Get all human motifs :)
 jdb_obj = jaspardb(release="JASPAR2020")
